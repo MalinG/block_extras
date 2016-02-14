@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * @file
+ * Contains semantic_blocks.module..
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\block\Entity\Block;
+/**
+ * Implements hook_help().
+ */
+function semantic_blocks_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the semantic_blocks module.
+    case 'help.page.semantic_blocks':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Ability to add block classes and set wrapper elements') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_form_alter
+ */
+
+function semantic_blocks_form_block_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  //TODO add permission: if (\Drupal::currentUser()->hasPermission('administer semantic blocks')) {}
+
+  /** @var \Drupal\block\BlockInterface $block */
+  $block = $form_state->getFormObject()->getEntity();
+
+  $form['third_party_settings']['#tree'] = TRUE;
+  $form['third_party_settings']['semantic_blocks']['wrapper_class'] = array (
+      '#type' => 'textfield',
+      '#title' => 'Block classes',
+      '#description' => t('Customize the styling of this block by adding CSS classes. Separate multiple classes by spaces.'),
+      '#default_value' => $block->getThirdPartySetting('semantic_blocks', 'wrapper_class'),
+    );
+
+
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function semantic_blocks_theme_suggestions_block_alter(array &$suggestions, array $variables) {
+  //var_dump($suggestions);
+  $new_suggestions = array_unshift($suggestions, 'block__semantic');
+  return $new_suggestions;
+}
+
+function semantic_blocks_preprocess_block(&$variables) {
+  /** @var Drupal\block\Entity\Block $block */
+  $block = Block::load($variables['elements']['#id']);
+
+  dpm($block->getThirdPartySetting('semantic_blocks', 'wrapper_class'));
+  if($variables['plugin_id'] == 'system_branding_block') {
+
+  }
+}
