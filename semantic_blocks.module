@@ -36,48 +36,49 @@ function semantic_blocks_form_block_form_alter(&$form, FormStateInterface $form_
 
   $form['third_party_settings']['#tree'] = TRUE;
   $form['third_party_settings']['semantic_blocks'] = array (
-      '#type' => 'fieldset',
-      '#title' => t('Semantic blocks settnings'),
-    );
+    '#type' => 'fieldset',
+    '#title' => t('Semantic blocks settnings'),
+  );
   $form['third_party_settings']['semantic_blocks']['container_element'] = array (
-      '#type' => 'select',
-      '#title' => t('Container element'),
-      '#options' => array(
-          0 => 'div',
-          1 => 'section',
-          2 => 'span',
-          3 => 'nav',
-          4 => 'none'
-       ),
-      '#description' => t('Specify the element of the container. The default value is div.'),
-      '#default_value' => $block->getThirdPartySetting('semantic_blocks', 'container_element'),
-    );
+    '#type' => 'select',
+    '#title' => t('Container element'),
+    '#options' => array(
+        0 => 'div',
+        1 => 'section',
+        2 => 'span',
+        3 => 'nav',
+        4 => 'none'
+     ),
+    '#description' => t('Specify the element of the container. The default value is div.'),
+    '#default_value' => $block->getThirdPartySetting('semantic_blocks', 'container_element'),
+  );
   $form['third_party_settings']['semantic_blocks']['container_class'] = array (
-      '#type' => 'textfield',
-      '#title' => t('container classes'),
-      '#description' => t('Add classes to the container element of this block. Separate multiple classes by spaces. Will not work if the container element is set to "none".'),
-      '#default_value' => $block->getThirdPartySetting('semantic_blocks', 'container_class'),
-    );
-    $form['third_party_settings']['semantic_blocks']['label_element'] = array (
-        '#type' => 'select',
-        '#title' => t('Label element'),
-        '#options' => array(
-            0 => 'h2',
-            1 => 'h3',
-            2 => 'h4',
-            3 => 'div',
-            4 => 'span',
-            5 => 'none'
-         ),
-        '#description' => t('Specify the element of the block label. The default value is h2.'),
-        '#default_value' => $block->getThirdPartySetting('semantic_blocks', 'label_element'),
-      );
-    $form['third_party_settings']['semantic_blocks']['label_class'] = array (
-        '#type' => 'textfield',
-        '#title' => t('Label classes'),
-        '#description' => t('Add classes to the label element of this block. Separate multiple classes by spaces. Will not work if the label element is set to "none".'),
-        '#default_value' => $block->getThirdPartySetting('semantic_blocks', 'label_class'),
-      );
+    '#type' => 'textfield',
+    '#title' => t('container classes'),
+    '#description' => t('Add classes to the container element of this block. Separate multiple classes by spaces. Will not work if the container element is set to "none".'),
+    '#default_value' => $block->getThirdPartySetting('semantic_blocks', 'container_class'),
+  );
+  $form['third_party_settings']['semantic_blocks']['label_element'] = array (
+    '#type' => 'select',
+    '#title' => t('Label element'),
+    '#options' => array(
+        0 => 'h2',
+        1 => 'h3',
+        2 => 'h4',
+        3 => 'h5',
+        4 => 'div',
+        5 => 'span',
+        6 => 'none'
+     ),
+    '#description' => t('Specify the element of the block label. The default value is h2.'),
+    '#default_value' => $block->getThirdPartySetting('semantic_blocks', 'label_element'),
+  );
+  $form['third_party_settings']['semantic_blocks']['label_class'] = array (
+    '#type' => 'textfield',
+    '#title' => t('Label classes'),
+    '#description' => t('Add classes to the label element of this block. Separate multiple classes by spaces. Will not work if the label element is set to "none".'),
+    '#default_value' => $block->getThirdPartySetting('semantic_blocks', 'label_class'),
+  );
 
 }
 
@@ -91,9 +92,12 @@ function semantic_blocks_theme_suggestions_block_alter(array &$suggestions, arra
 }
 
 function semantic_blocks_preprocess_block(&$variables) {
-  /** @var Drupal\block\Entity\Block $block */
+  /** @var $block Drupal\block\Entity\Block */
   $block = Block::load($variables['elements']['#id']);
+  // Default values
   $variables['container_element'] = 'div';
+  $variables['label_element'] = 'h2';
+
   $container_element_options = array(
     0 => 'div',
     1 => 'section',
@@ -102,15 +106,31 @@ function semantic_blocks_preprocess_block(&$variables) {
     4 => 'none'
   );
 
+  $label_element_options = array(
+      0 => 'h2',
+      1 => 'h3',
+      2 => 'h4',
+      3 => 'h5',
+      4 => 'div',
+      5 => 'span',
+      6 => 'none'
+   );
+
   $semantic_settings = $block->getThirdPartySettings('semantic_blocks');
   if(!empty($semantic_settings)) {
-    //dpm($semantic_settings);
+    // Wrapper variables
     if($semantic_settings['container_element']) {
-      $variables['container_element'] = $container_element_options[$semantic_settings['container_element']];
+      $variables['semantic_blocks']['container_element'] = $container_element_options[$semantic_settings['container_element']];
     }
-
     if($semantic_settings['container_class']) {
       $variables['attributes']['class'][] = $semantic_settings['container_class'];
+    }
+    // Label variables
+    if($semantic_settings['label_element']) {
+      $variables['semantic_blocks']['label_element'] = $label_element_options[$semantic_settings['label_element']];
+    }
+    if($semantic_settings['container_class']) {
+      $variables['title_attributes']['class'][] = $semantic_settings['label_class'];
     }
 
   }

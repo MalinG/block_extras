@@ -21,16 +21,19 @@
  *   displayed in front of the main title tag that appears in the template.
  * - title_suffix: Additional output populated by modules, intended to be
  *   displayed after the main title tag that appears in the template.
+ * - semantic_blocks:
+ *   - container_element
+ *   - label_element
  *
  * @see template_preprocess_block()
  *
  * @ingroup themeable
  */
 #}
-<div{{ attributes }}>
+<{{semantic_blocks.container_element}}{{ attributes }}>
   {{ title_prefix }}
   {% if label %}
-    <h2{{ title_attributes }}>{{ label }}</h2>
+    <{{semantic_blocks.label_element}}{{ title_attributes }}>{{ label }}</h2>
   {% endif %}
   {{ title_suffix }}
   {% block content %}
