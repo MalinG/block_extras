@@ -32,13 +32,23 @@
  */
  // TODO: Add the no container option to template.
 #}
-<{{container_element}}{{ attributes }}>
+{% if not (container_element == 'none') %}
+<{{ container_element }}{{ attributes }}>
+{% endif %}
   {{ title_prefix }}
   {% if label %}
-    <{{label_element}}{{ title_attributes }}>{{ label }}</{{label_element}}>
+    <{{ label_element }}{{ title_attributes }}>{{ label }}</{{ label_element }}>
   {% endif %}
   {{ title_suffix }}
   {% block content %}
+    {% if content_element == 'none'%}
     {{ content }}
+    {% else %}
+    <{{ content_element }}{{ content_attributes }}>
+      {{ content }}
+    </{{ content_element }}>
+    {% endif %}
   {% endblock %}
-</{{container_element}}>
+{% if not (container_element == 'none') %}
+</{{ container_element }}>
+{% endif %}
