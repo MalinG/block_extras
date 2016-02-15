@@ -21,22 +21,24 @@
  *   displayed in front of the main title tag that appears in the template.
  * - title_suffix: Additional output populated by modules, intended to be
  *   displayed after the main title tag that appears in the template.
- * - semantic_blocks:
- *   - container_element
- *   - label_element
+ * - container_element: Extra block configuration from the semantic blocks
+ *   module. Sets the html element of the block container.
+ * - label_element: Extra block configuration from the semantic blocks
+ *   module. Sets the html element of the block label.
  *
  * @see template_preprocess_block()
  *
  * @ingroup themeable
  */
+ // TODO: Add the no container option to template.
 #}
-<{{semantic_blocks.container_element}}{{ attributes }}>
+<{{container_element}}{{ attributes }}>
   {{ title_prefix }}
   {% if label %}
-    <{{semantic_blocks.label_element}}{{ title_attributes }}>{{ label }}</h2>
+    <{{label_element}}{{ title_attributes }}>{{ label }}</{{label_element}}>
   {% endif %}
   {{ title_suffix }}
   {% block content %}
     {{ content }}
   {% endblock %}
-</div>
+</{{container_element}}>

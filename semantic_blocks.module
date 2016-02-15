@@ -80,6 +80,8 @@ function semantic_blocks_form_block_form_alter(&$form, FormStateInterface $form_
     '#default_value' => $block->getThirdPartySetting('semantic_blocks', 'label_class'),
   );
 
+  //TODO: Add contnent wrapper and classes
+
 }
 
 /**
@@ -120,19 +122,21 @@ function semantic_blocks_preprocess_block(&$variables) {
   if(!empty($semantic_settings)) {
     // Wrapper variables
     if($semantic_settings['container_element']) {
-      $variables['semantic_blocks']['container_element'] = $container_element_options[$semantic_settings['container_element']];
+      $variables['container_element'] = $container_element_options[$semantic_settings['container_element']];
     }
     if($semantic_settings['container_class']) {
       $variables['attributes']['class'][] = $semantic_settings['container_class'];
     }
     // Label variables
     if($semantic_settings['label_element']) {
-      $variables['semantic_blocks']['label_element'] = $label_element_options[$semantic_settings['label_element']];
+      $variables['label_element'] = $label_element_options[$semantic_settings['label_element']];
     }
     if($semantic_settings['container_class']) {
       $variables['title_attributes']['class'][] = $semantic_settings['label_class'];
     }
 
   }
+
+  //TODO: Add content container element and classes.
 
 }
