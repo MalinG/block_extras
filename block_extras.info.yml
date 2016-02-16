@@ -1,4 +1,4 @@
-name: Semantic blocks
+name: Block extras
 type: module
 description: Ability to add block classes and set wrapper elements
 core: 8.x
