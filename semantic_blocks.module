@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains semantic_blocks.module..
+ * Contains block_extras.module..
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -11,10 +11,10 @@ use Drupal\block\Entity\Block;
 /**
  * Implements hook_help().
  */
-function semantic_blocks_help($route_name, RouteMatchInterface $route_match) {
+function block_extras_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
-    // Main module help for the semantic_blocks module.
-    case 'help.page.semantic_blocks':
+    // Main module help for the block_extras module.
+    case 'help.page.block_extras':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('Ability to add block classes and set container elements') . '</p>';
@@ -28,17 +28,17 @@ function semantic_blocks_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_form_alter
  */
 
-function semantic_blocks_form_block_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function block_extras_form_block_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   if (\Drupal::currentUser()->hasPermission('administer semantic blocks')) {
     /** @var \Drupal\block\BlockInterface $block */
     $block = $form_state->getFormObject()->getEntity();
 
     $form['third_party_settings']['#tree'] = TRUE;
-    $form['third_party_settings']['semantic_blocks'] = array (
+    $form['third_party_settings']['block_extras'] = array (
       '#type' => 'fieldset',
       '#title' => t('Semantic blocks settnings'),
     );
-    $form['third_party_settings']['semantic_blocks']['container_element'] = array (
+    $form['third_party_settings']['block_extras']['container_element'] = array (
       '#type' => 'select',
       '#title' => t('Container element'),
       '#options' => array(
@@ -49,15 +49,15 @@ function semantic_blocks_form_block_form_alter(&$form, FormStateInterface $form_
           4 => 'none'
        ),
       '#description' => t('Specify the element of the container. The default value is div.'),
-      '#default_value' => $block->getThirdPartySetting('semantic_blocks', 'container_element'),
+      '#default_value' => $block->getThirdPartySetting('block_extras', 'container_element'),
     );
-    $form['third_party_settings']['semantic_blocks']['container_class'] = array (
+    $form['third_party_settings']['block_extras']['container_class'] = array (
       '#type' => 'textfield',
       '#title' => t('container classes'),
       '#description' => t('Add classes to the container element of this block. Separate multiple classes by spaces. Will not work if the container element is set to "none".'),
-      '#default_value' => $block->getThirdPartySetting('semantic_blocks', 'container_class'),
+      '#default_value' => $block->getThirdPartySetting('block_extras', 'container_class'),
     );
-    $form['third_party_settings']['semantic_blocks']['label_element'] = array (
+    $form['third_party_settings']['block_extras']['label_element'] = array (
       '#type' => 'select',
       '#title' => t('Label element'),
       '#options' => array(
@@ -70,16 +70,16 @@ function semantic_blocks_form_block_form_alter(&$form, FormStateInterface $form_
           6 => 'none'
        ),
       '#description' => t('Specify the element of the block label. The default value is h2.'),
-      '#default_value' => $block->getThirdPartySetting('semantic_blocks', 'label_element'),
+      '#default_value' => $block->getThirdPartySetting('block_extras', 'label_element'),
     );
-    $form['third_party_settings']['semantic_blocks']['label_class'] = array (
+    $form['third_party_settings']['block_extras']['label_class'] = array (
       '#type' => 'textfield',
       '#title' => t('Label classes'),
       '#description' => t('Add classes to the label element of this block. Separate multiple classes by spaces. Will not work if the label element is set to "none".'),
-      '#default_value' => $block->getThirdPartySetting('semantic_blocks', 'label_class'),
+      '#default_value' => $block->getThirdPartySetting('block_extras', 'label_class'),
     );
 
-    $form['third_party_settings']['semantic_blocks']['content_element'] = array (
+    $form['third_party_settings']['block_extras']['content_element'] = array (
       '#type' => 'select',
       '#title' => t('Content container element'),
       '#options' => array(
@@ -90,13 +90,13 @@ function semantic_blocks_form_block_form_alter(&$form, FormStateInterface $form_
           4 => 'nav',
        ),
       '#description' => t('Specify the element of the block content. The default value is none.'),
-      '#default_value' => $block->getThirdPartySetting('semantic_blocks', 'content_element'),
+      '#default_value' => $block->getThirdPartySetting('block_extras', 'content_element'),
     );
-    $form['third_party_settings']['semantic_blocks']['content_class'] = array (
+    $form['third_party_settings']['block_extras']['content_class'] = array (
       '#type' => 'textfield',
       '#title' => t('Content classes'),
       '#description' => t('Add classes to the content element of this block. Separate multiple classes by spaces. Will not work if the content element is set to "none".'),
-      '#default_value' => $block->getThirdPartySetting('semantic_blocks', 'content_class'),
+      '#default_value' => $block->getThirdPartySetting('block_extras', 'content_class'),
     );
   }
 }
@@ -104,13 +104,13 @@ function semantic_blocks_form_block_form_alter(&$form, FormStateInterface $form_
 /**
  * Implements hook_theme_suggestions_HOOK_alter().
  */
-function semantic_blocks_theme_suggestions_block_alter(array &$suggestions, array $variables) {
+function block_extras_theme_suggestions_block_alter(array &$suggestions, array $variables) {
   // Let semantic block template override the default block template.
   $new_suggestions = array_unshift($suggestions, 'block__semantic');
   return $new_suggestions;
 }
 
-function semantic_blocks_preprocess_block(&$variables) {
+function block_extras_preprocess_block(&$variables) {
   /** @var $block Drupal\block\Entity\Block */
   $block = Block::load($variables['elements']['#id']);
   // Default values
@@ -144,7 +144,7 @@ function semantic_blocks_preprocess_block(&$variables) {
      4 => 'nav',
    );
 
-  $semantic_settings = $block->getThirdPartySettings('semantic_blocks');
+  $semantic_settings = $block->getThirdPartySettings('block_extras');
   if(!empty($semantic_settings)) {
     // Wrapper variables
     if($semantic_settings['container_element']) {
