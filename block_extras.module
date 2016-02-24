@@ -38,6 +38,8 @@ function block_extras_form_block_form_alter(&$form, FormStateInterface $form_sta
       '#type' => 'fieldset',
       '#title' => t('extra blocks settnings'),
     );
+
+    //TODO: Should the none option be removed?
     $form['third_party_settings']['block_extras']['container_element'] = array (
       '#type' => 'select',
       '#title' => t('Container element'),
